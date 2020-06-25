@@ -184,7 +184,7 @@ def get_serie_storyline(serie_html):
 
 
 # Deal with all the information except the storyline.
-%%time  # ~4min
+
 serie_details = []
 
 # Initiate the rank number.
@@ -218,8 +218,6 @@ print(serie_details)
 
 
 # Deal with the storylines.
-
-%%time # ~3min30
 
 serie_resume = []
 
