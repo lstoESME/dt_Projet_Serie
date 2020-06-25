@@ -27,17 +27,13 @@ useless_words = useless.readlines()
 for n in range(len(useless_words)):
     useless_words[n] = useless_words[n].rstrip('\n')
     
-# Union on all 3 lists "stop_words".
-#STOP_WORDS = nltk_stopwords.union(sklearn_stopwords).union(useless_words)
+# Union on all "stop_words".
 STOP_WORDS = nltk_stopwords.union(sklearn_stopwords)
 
 # Load data that contains series storylines.
 df_storylines = pd.read_csv("C:\\Users\\stosc\\Documents\\ESME\\Ingé2_2019-2020\\S2\\UE1\\DataTools\\Projet\series_storylines.csv",
                       header=0, index_col=0)
 #type(df_storylines)
-
-# Create dataframe with top 10 series.
-df_top_ten = pd.DataFrame(df_storylines.iloc[0:10,0])
 
 
 """Clean Data"""
@@ -84,6 +80,9 @@ def remove_digits(story):
 
 df_storylines["Storyline"] = df_storylines["Storyline"].apply(remove_punctuation)
 df_storylines["Storyline"] = df_storylines["Storyline"].apply(remove_digits)
+
+# Create dataframe with top 10 series.
+df_top_ten = pd.DataFrame(df_storylines.iloc[0:10,0])
 
 
 """Analyse Data : countVectorizer"""
