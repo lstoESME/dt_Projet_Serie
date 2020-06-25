@@ -10,6 +10,9 @@ url_rank_serie = 'https://www.imdb.com/chart/toptv/'
 url_imdb_base = 'https://www.imdb.com'
 url_serie_ = f'?pf_rd_m=A2FGELUUNOQJNL&pf_rd_p=12230b0e-0e00-43ed-9e59-8d5353703cce&pf_rd_r=BFQY8EMES4H7BK35D10R&pf_rd_s=center-1&pf_rd_t=15506&pf_rd_i=toptv&ref_=chttvtp_tt_'
 
+"""Scrapping"""
+
+
 def get_html_from_link(page_link):
     '''
         Get HTML from web page and parse it.
@@ -24,13 +27,15 @@ def get_html_from_link(page_link):
     soup = BeautifulSoup(response.text, 'html.parser')
     return soup
 
-    html_all = get_html_from_link(url_rank_serie)
+
+html_all = get_html_from_link(url_rank_serie)
 #print(html_all.prettify())
+
 
 def get_link_to_serie(root_html):
 
     """
-    This function extract the link to acces the series information page.
+    This function extract the link to access the series information page.
     
     :param root_html: BeautifulSoup Element that contains all books links.
     :type book_html: bs4.BeautifulSoup.
@@ -46,13 +51,14 @@ def get_link_to_serie(root_html):
     #len(serie_links)
     return(serie_links)
 
-    serie_links=get_link_to_serie(html_all)
+serie_links=get_link_to_serie(html_all)
 #serie_links
+
 
 def get_info_serie(serie_html):
     
     """
-    Return series informations
+    Return series informations.
     
     :param serie_html: BeautifulSoup element that contains serie infos.
     :type serie_html: bs4.element.Tag.
@@ -157,12 +163,34 @@ def get_info_serie(serie_html):
     
     return(serie_title, serie_genre, serie_nb_season, serie_nb_episode, serie_type, serie_actors, serie_creators, serie_origin, serie_language, serie_certification,  serie_rating)
 
-    %%time
+
+def get_serie_storyline(serie_html):
+    
+    """
+    Return series storyline from the serie web page.
+    
+    :param serie_html: BeautifulSoup element that contains serie infos.
+    :type serie_html: bs4.element.Tag.
+    :return: storyline of the TV series.
+    :rtype: tuple(string)
+    """
+    
+    for div in serie_html.find_all("div", {"id":"titleStoryLine"}):
+        for story in div.find_all("div", {"class":"inline canwrap"}):
+            storyline = story.find("span").text
+    
+    return(storyline)
+
+
+
+# Deal with all the information except the storyline.
+%%time  # ~4min
 serie_details = []
 
-#Initiate the rank number.
+# Initiate the rank number.
 rank_number = 0
 
+# Take the first 100 series.
 for n in range(len(serie_links)-150):
     
     rank_number = n + 1
@@ -177,14 +205,75 @@ for n in range(len(serie_links)-150):
     
     # Apply get_info_serie function to return every link informations.
     info = get_info_serie(html)
-    # Add rank.
+    # Add rank to the list return by the function get_info_serie.
     info = (rank_number,) + info
     
     # Info contains tuples : add them to a list.
     serie_details.append(info)
-    print(rank_number)
-    #print(serie_details)
+    #print(rank_number)
+
     
 print(serie_details)
 
 
+
+# Deal with the storylines.
+
+%%time # ~3min30
+
+serie_resume = []
+
+#Initiate the rank number.
+rank_number = 0
+
+for n in range(len(serie_links)-150):
+    
+    rank_number = n + 1
+    # Add rank_number at the en of the url.
+    url_serie_rank = url_serie_ + str(rank_number)
+    
+    # Get the entire url of the page that contains serie informations.
+    link_serie = url_imdb_base + serie_links[n] + url_serie_rank
+    #print(link_serie) 
+    
+    html_story = get_html_from_link(link_serie)
+    
+    # Apply get_info_storyline function to return every storyline.
+    serie_storyline = get_serie_storyline(html_story)
+    
+    serie_resume.append(serie_storyline)
+
+    #print(rank_number) 
+
+
+
+#Get list of rank numbers to insert into dataframe.
+
+rank_number = 0
+rank=[]
+
+for n in range(len(serie_links)-150):
+    
+    rank_number = n + 1
+    
+    rank.append(rank_number)
+    
+#print(rank)
+
+
+
+"""Put datas into dataframe"""
+# Dataframe for all the oonformations except storylines.
+df_serie = pd.DataFrame(serie_details, 
+                        columns = ["Rank", "Title", "Genre", "Number_of_season", "Number_of_episodes", "Type", "Actors", 
+                                   "Creators", "Origin", "Language", "Certification", "Rating"])
+
+df_serie.to_csv('C:\\Users\\stosc\\Documents\\ESME\\Ingé2_2019-2020\\S2\\UE1\\DataTools\\Projet\series_data.csv', 
+                index=False, header=True)
+
+
+# Dataframe for storylines.
+df_storyline = pd.DataFrame(serie_resume, columns=["Storyline"], index=rank)
+
+df_storyline.to_csv('C:\\Users\\stosc\\Documents\\ESME\\Ingé2_2019-2020\\S2\\UE1\\DataTools\\Projet\series_storylines.csv', 
+                header=True)
