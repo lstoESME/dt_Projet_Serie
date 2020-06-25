@@ -134,16 +134,7 @@ plt.xticks(rotation=90)
 plt.show()
 
 
-import unittest
-class TestNlp(unittest.TestCase):
 
-
-    def test_remove_digits(self):
-
-        given = "Remove 3"
-        expected_output = "Remove "
-        output = remove_digits(given)
-        self.assertEqual(expected_output, output)
 
 
 
