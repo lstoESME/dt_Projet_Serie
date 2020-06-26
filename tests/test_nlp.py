@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("C:\\Users\\stosc\\Documents\\ESME\\Ingé2_2019-2020\\S2\\UE1\\DataTools\\Projet\\codes\\NLP")
 
-from NLP import remove_punctuation ,remove_digits
+from NLP import remove_punctuation, remove_digits
 
 
 

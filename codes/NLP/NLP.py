@@ -31,7 +31,7 @@ for n in range(len(useless_words)):
 STOP_WORDS = nltk_stopwords.union(sklearn_stopwords)
 
 # Load data that contains series storylines.
-df_storylines = pd.read_csv("C:\\Users\\stosc\\Documents\\ESME\\Ingé2_2019-2020\\S2\\UE1\\DataTools\\Projet\series_storylines.csv",
+df_storylines = pd.read_csv("C:\\Users\\stosc\\Documents\\ESME\\Ingé2_2019-2020\\S2\\UE1\\DataTools\\Projet\\series_storylines.csv",
                       header=0, index_col=0)
 #type(df_storylines)
 
@@ -96,9 +96,9 @@ new_df_storylines = pd.DataFrame(cv_transform.toarray(), columns=cv.get_feature_
 
 word_frequency = new_df_storylines.sum(axis=0).sort_values(ascending=False)
 
-plt.figure(figsize=(30, 60))
-word_frequency[:100].plot.barh()
-plt.title("Distribution of Word frequency (Top 100)")
+plt.figure(figsize=(40, 90))
+word_frequency[:50].plot.barh()
+plt.title("Distribution of Word frequency (Top 50)")
 plt.xlabel("Words")
 plt.ylabel("Frequency")
 #plt.show()
@@ -132,17 +132,6 @@ plt.bar(height=inverse_document_freq[:50]['idf'],
 plt.xticks(rotation=90)
 plt.show()
 
-
-import unittest
-class TestNlp(unittest.TestCase):
-
-
-    def test_remove_digits(self):
-
-        given = "Remove 3"
-        expected_output = "Remove "
-        output = remove_digits(given)
-        self.assertEqual(expected_output, output)
 
 
 

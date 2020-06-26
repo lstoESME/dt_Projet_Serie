@@ -1,0 +1,8 @@
+pandas
+numpy
+sklearn
+unittest
+bs4
+selenium
+matplotlib
+nlyk
