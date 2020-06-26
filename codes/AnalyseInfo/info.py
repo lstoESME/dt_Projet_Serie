@@ -21,16 +21,6 @@ print(redondant_language)
 
 
 '''
-    Reccupération du format d'épisode et du type les plus communs
-'''
-redondant_format=collections.Counter(df_serie['Number_of_episodes']).most_common(3)
-print(redondant_format)
-
-redondant_type=collections.Counter(df_serie['Type']).most_common(3)
-print(redondant_type)
-
-
-'''
        Reccupération des 10 acteurs les plus cotés sur le top 10
 '''
 list_actors=[]
@@ -117,7 +107,7 @@ for n in range(len(df_serie["Origin"])) :
         if element!='':
             list_origin.append(element)
         
-redondant_origin=collections.Counter(list_origin).most_common(2)
+redondant_origin=collections.Counter(list_origin).most_common(3)
 print(redondant_origin)
 
 
@@ -126,7 +116,7 @@ print(redondant_origin)
 '''
 list_certification=[]
 
-for n in range(len(df_serie["Origin"])) :
+for n in range(len(df_serie["Certification"])) :
     clean_column = str(df_serie.iloc[n, 9])
     clean= clean_column.replace('[','')
     clean = clean.replace(']','')
@@ -142,5 +132,40 @@ for n in range(len(df_serie["Origin"])) :
         
 list_certification
 
-redondant_certification=collections.Counter(list_certification).most_common(2)
+redondant_certification=collections.Counter(list_certification).most_common(3)
 print(redondant_certification)
+
+
+'''
+       Reccupération des types. 
+'''
+list_type=[]
+
+for n in range(len(df_serie["Type"])) :
+    clean_column = df_serie.iloc[n, 4]
+    clean= clean_column.replace('(','')
+    clean = clean.replace(')','')
+    clean = clean.replace('0','')
+    clean = clean.replace('1','')
+    clean = clean.replace('2','')
+    clean = clean.replace('3','')
+    clean = clean.replace('4','')
+    clean = clean.replace('5','')
+    clean = clean.replace('6','')
+    clean = clean.replace('7','')
+    clean = clean.replace('8','')    
+    clean = clean.replace('9','')
+    clean = clean.replace(' ','')
+    clean = clean.replace('–','')
+
+    #Split strings element to list : get actors.
+    liste = clean.split("\n")
+
+    for element in liste:
+        if element!='':
+            list_type.append(element)
+        
+
+list_type
+redondant_type=collections.Counter(list_type).most_common(3)
+print(redondant_type)
